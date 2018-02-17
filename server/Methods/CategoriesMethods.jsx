@@ -6,7 +6,7 @@ Meteor.methods({
     Categories.insert({category})
   },
   removeCategory:function(id) {
-    Categories.delete({_id:id})
+    Categories.remove({_id:id})
   },
   updateCategory:function(id, category) {
     Categories.update({_id:id},

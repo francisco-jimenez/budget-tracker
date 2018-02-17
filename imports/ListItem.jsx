@@ -19,7 +19,7 @@ export default class ListItem extends React.Component{
             return(
               <List.Item>
                 <List.Content floated='right'>
-                  <Button>Delete</Button>
+                  <Button onClick={()=>{this.props.removeItem(item._id)}}>Delete</Button>
                 </List.Content>
                 <List.Content floated='right'>
                   <Button onClick={()=>{this.props.updateItem(item._id)}}>Edit</Button>
