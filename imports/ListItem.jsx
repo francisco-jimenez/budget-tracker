@@ -14,7 +14,18 @@ export default class ListItem extends React.Component{
     }**/
 
     render(){
-            var {item} = this.props;
+            var { fieldsToDisplay } = this.props;
+            var { labelsToDisplay } = this.props;
+            var { item } = this.props;
+            debugger;
+            var contentToDisplay = '';
+            for (var i = 0; i<fieldsToDisplay.length; i++) {
+              if(fieldsToDisplay[i] in item){
+                  contentToDisplay = contentToDisplay + ' ' + labelsToDisplay[i];
+                  contentToDisplay = contentToDisplay + ' ' + item[fieldsToDisplay[i]];
+              }
+            }
+
             console.log = this.props;
             return(
               <List.Item>
@@ -26,7 +37,7 @@ export default class ListItem extends React.Component{
                 </List.Content>
                 <List.Content>
                   <div>
-                    {item[this.props.fieldToDisplay]}
+                    {contentToDisplay}
                   </div>
                 </List.Content>
               </List.Item>

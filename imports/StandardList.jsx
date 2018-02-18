@@ -16,7 +16,7 @@ render(){
                 {
                     itemList.map((item, index) => {
                             return (
-                                      <ListItem updateItem={this.props.updateItem} removeItem={this.props.removeItem} key={item._id} item={item} fieldToDisplay = {fieldToDisplay}/>
+                                      <ListItem updateItem={this.props.updateItem} removeItem={this.props.removeItem} key={item._id} item={item} fieldsToDisplay = {this.props.fieldsToDisplay} labelsToDisplay = {this.props.labelsToDisplay}/>
                                     )
                     })
                 }

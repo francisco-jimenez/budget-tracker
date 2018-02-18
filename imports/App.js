@@ -1,11 +1,7 @@
 
     import React from 'react'
-    import Home from './Home'
-    import About from './About'
-    import ContactUs from './ContactUs'
     import Menu from './Menu'
     import StandardList from './StandardList'
-    import ModalConfirmDelete from './ModalConfirmDelete'
     import EditProject from './EditProject'
     import { Categories } from './api/Categories.js'
     import { Projects } from './api/Projects.js'
@@ -49,29 +45,32 @@
                         var categoriesList = Categories.find({}).fetch()
                         if(categoriesList.length > 0)  {
                               that.setState({categories:categoriesList}, () =>
-                              {
+                                  {
                                   //console.log(this.state);
-                              })
-                  } else{
-                        var categoriesList = [];
-                        //categoriesList.push('Default');
-                        that.setState({categories: categoriesList})
-                  }
+                                  })
 
-                  var projectsList = Projects.find({}).fetch()
+                        } else{
+                              var categoriesList = [];
+                              //categoriesList.push('Default');
+                              that.setState({categories: categoriesList})
 
-                  if(projectsList.length > 0)  {
-                        that.setState({projects:projectsList}, () =>
-                              {
-                                //console.log(this.state);
-                              })
-                  } else{
-                      var projectsList = [];
-                      //projectsList.push('Default');
-                      that.setState({projects: projectsList})
-                  }
-                })
-              }
+                        }
+
+                        var projectsList = Projects.find({}).fetch()
+
+                        if(projectsList.length > 0)  {
+                              that.setState({projects:projectsList}, () =>
+                                    {
+                                      //console.log(this.state);
+                                    })
+                        } else{
+                            var projectsList = [];
+                            //projectsList.push('Default');
+                            that.setState({projects: projectsList})
+
+                        }
+              })
+            }
 
 
 ///////////// CATEGORIES METHODS/////////////////////
@@ -122,7 +121,7 @@
                     if (result) {
                         var currentProject = {};
                         debugger;
-                        "_id"    in result  ? currentProject._id   = result._id   : currentProject._id   = '';
+                        "_id"    in result  ? currentProject._id    = result._id   : currentProject._id   = '';
                         "name"    in result ? currentProject.name   = result.name   : currentProject.name   = '';
                         "budget"  in result ? currentProject.budget = result.budget : currentProject.budget = '';
                         "entries" in result ? currentProject.entries= result.entries: currentProject.entries= [];
@@ -178,10 +177,11 @@
 
 
             render(){
-                    let { name } = this.state
-                    let { age  } = this.state
-                    let { phone} = this.state
                     let { page } = this.state
+                    let fieldsToDisplayInProjectList = ['name','budget']
+                    let labelsToDisplayInProjectList = ['Name: ', 'Budget: ' ]
+                    let fieldsToDisplayInCategoryList = ['category']
+                    let labelsToDisplayInCategoryList = ['Name: ']
                     let   shown
                     let addFunction;
 
@@ -190,7 +190,8 @@
                                           updateItem={this.updateProject}
                                           removeItem={this.removeProject}
                                           itemList= {this.state.projects}
-                                          fieldToDisplay = 'name'
+                                          fieldsToDisplay = {fieldsToDisplayInProjectList}
+                                          labelsToDisplay = {labelsToDisplayInProjectList}
                                     />
 
                     }else if(page == 'Categories'){
@@ -198,15 +199,22 @@
                                           updateItem={this.updateCategory}
                                           removeItem={this.removeCategory}
                                           itemList= {this.state.categories}
-                                          fieldToDisplay = 'category'
+                                          fieldsToDisplay = {fieldsToDisplayInCategoryList}
+                                          labelsToDisplay = {labelsToDisplayInCategoryList}
                                     />
 
                     }else if (page == 'Project_Detail') {
-                            shown = <EditProject EditProjectHandler = {this.EditProjectHandler} currentProject = {this.state.currentProject}></EditProject>
+                            shown = <EditProject
+                                                EditProjectHandler = {this.EditProjectHandler}
+                                                currentProject = {this.state.currentProject}>
+                                      </EditProject>
                     }
                     return  (
                                 <div>
-                                      <Menu  changePage ={this.changePage} activeItem={this.state.page} />
+                                      <Menu
+                                              changePage ={this.changePage}
+                                              activeItem={this.state.page}
+                                      />
                                       {shown}
                                       <div id='footer' onClick = {this.addFunction.bind(this)}>
                                               {this.state.addButtonText}

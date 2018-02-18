@@ -48,15 +48,6 @@ class EditProject extends Component {
                             <Form.Field control={Input} value = {currentProject.name} label='Project name' placeholder={currentProject.name} onChange={this.onChangeName.bind(this)} />
                             <Form.Field control={Input} value = {currentProject.budget} type='number' label='Budget' placeholder='Budget' onChange={this.onChangeBudget.bind(this)} />
                       </Form.Group>
-                      <Form.Group inline>
-                            <label>Quantity</label>
-                            <Form.Field control={Radio} label='One' value='1' checked={value === '1'} onChange={this.handleChange} />
-                            <Form.Field control={Radio} label='Two' value='2' checked={value === '2'} onChange={this.handleChange} />
-                            <Form.Field control={Radio} label='Three' value='3' checked={value === '3'} onChange={this.handleChange} />
-                      </Form.Group>
-                            <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' />
-                            <Form.Field control={Checkbox} label='I agree to the Terms and Conditions' />
-                      <Form.Field control={Button} onClick={() => {this.props.EditProjectHandler(currentProject)}} >Submit</Form.Field>
                 </Form>
           )
     }
