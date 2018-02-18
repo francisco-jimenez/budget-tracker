@@ -14,7 +14,7 @@ export default class MenuExamplePointing extends Component {
 
     return (
       <div>
-        <Menu tabular>
+        <Menu fluid widths={2}>
           <Menu.Item name='Projects' active={activeItem === 'Projects'} onClick={this.handleItemClick} />
           <Menu.Item name='Categories' position='right' active={activeItem === 'Categories'} onClick={this.handleItemClick} />
         </Menu>
