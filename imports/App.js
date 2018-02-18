@@ -6,6 +6,7 @@
     import Menu from './Menu'
     import StandardList from './StandardList'
     import ModalConfirmDelete from './ModalConfirmDelete'
+    import EditProject from './EditProject'
     import { Categories } from './api/Categories.js'
     import { Projects } from './api/Projects.js'
 
@@ -16,14 +17,24 @@
                                     page: 'Projects' ,
                                     categories : [],
                                     projects: [] ,
-                                    addButtonText : 'Add Project'
+                                    addButtonText : 'Add Project',
+                                    currentProject : {
+                                                        name : null ,
+                                                        budget : null ,
+                                                        entries : []
+                                                      }
                                   }
-                    this.addFunction = this.addProject.bind(this);
-                    this.changePage = this.changePage.bind(this);
-                    this.updateProject = this.updateProject.bind(this);
-                    this.removeProject = this.removeProject.bind(this);
-                    this.updateCategory = this.updateCategory.bind(this);
-                    this.removeCategory = this.removeCategory.bind(this);
+
+                    this.addFunction        = this.addProject.bind(this);
+
+                    this.changePage         = this.changePage.bind(this);
+
+                    this.updateProject      = this.updateProject.bind(this);
+                    this.removeProject      = this.removeProject.bind(this);
+                    this.EditProjectHandler = this.EditProjectHandler.bind(this);
+
+                    this.updateCategory     = this.updateCategory.bind(this);
+                    this.removeCategory     = this.removeCategory.bind(this);
                     //this.CategoriesList = ['Cat 1', 'Cat 2','Cat 3','Cat 4']
 
             }
@@ -35,12 +46,12 @@
             componentWillMount() {
                 var that = this;
                 Tracker.autorun(()=>{
-                  var categoriesList = Categories.find({}).fetch()
-                  if(categoriesList.length > 0)  {
-                        that.setState({categories:categoriesList}, () =>
-                        {
-                            //console.log(this.state);
-                        })
+                        var categoriesList = Categories.find({}).fetch()
+                        if(categoriesList.length > 0)  {
+                              that.setState({categories:categoriesList}, () =>
+                              {
+                                  //console.log(this.state);
+                              })
                   } else{
                         var categoriesList = [];
                         //categoriesList.push('Default');
@@ -72,19 +83,19 @@
             }
 
             updateCategory(id, newCategory) {
-                Meteor.call('getCategoryById', id, function(error, result) {
-                      var newCategoryName = prompt('type new category Name',result.category)
-                      Meteor.call('updateCategory', id, newCategoryName);
-                })
+                  Meteor.call('getCategoryById', id, function(error, result) {
+                        var newCategoryName = prompt('type new category Name',result.category)
+                        Meteor.call('updateCategory', id, newCategoryName);
+                  })
             }
 
             addCategory(e) {
-              e.preventDefault();
+                  e.preventDefault();
 
-              var category = prompt("Category name:");
-              if(category && category != ''){
-                    Meteor.call('addCategory' , category)
-              }
+                  var category = prompt("Category name:");
+                  if(category && category != ''){
+                        Meteor.call('addCategory' , category)
+                  }
             }
 
 
@@ -96,24 +107,44 @@
                 Meteor.call('removeProject' , id)
             }
 
+            EditProjectHandler(updatedProject){
+                  debugger;
+                  //updateProject(updatedProject._id, updatedProject)
+                  //var newProjectName = prompt('type new project Name',result.name)
+                  this.setState({currentProject : updatedProject})
+                  Meteor.call('updateProject', updatedProject._id, updatedProject)
+            }
+
             updateProject(id, newProject) {
                 var that = this;
+
                 Meteor.call('getProjectById', id, function(error, result) {
-                    //var newProjectName = prompt('type new project Name',result.name)
-                    //Meteor.call('updateProject', id, newProjectName)
-                    that.changePage('Project_Detail');
+                    if (result) {
+                        var currentProject = {};
+                        debugger;
+                        "_id"    in result  ? currentProject._id   = result._id   : currentProject._id   = '';
+                        "name"    in result ? currentProject.name   = result.name   : currentProject.name   = '';
+                        "budget"  in result ? currentProject.budget = result.budget : currentProject.budget = '';
+                        "entries" in result ? currentProject.entries= result.entries: currentProject.entries= [];
+
+                        that.setState({currentProject : currentProject}, () => {
+                            that.changePage('Project_Detail');
+                        });
+
+                    }
                 })
             }
 
             addProject(e) {
-              var name = prompt("Project name:");
-              e.preventDefault();
-              if(name && name != ''){
-                Meteor.call('addProject' , name, function(error, result) {
-                    console.log('error'  , error);
-                    console.log('result' ,result);
-                })
-              }
+                var name = prompt("Project name:");
+                e.preventDefault();
+                if(name && name != ''){
+                    Meteor.call('addProject' , name, function(error, result)
+                    {
+                        console.log('error'  , error);
+                        console.log('result' ,result);
+                    })
+                }
             }
 
 
@@ -135,10 +166,12 @@
                       addButtonText = 'Add Entry'
 
                 }
-                this.setState({
-                      page          : page ,
+                this.setState(
+                    {
+                      page          : page          ,
                       addButtonText : addButtonText
-                })
+                    }
+                )
             }
 
 ///////////////RENDER////////////////////////////////
@@ -167,9 +200,9 @@
                                           itemList= {this.state.categories}
                                           fieldToDisplay = 'category'
                                     />
-                                    
+
                     }else if (page == 'Project_Detail') {
-                            shown = <h3>Project Detail</h3>
+                            shown = <EditProject EditProjectHandler = {this.EditProjectHandler} currentProject = {this.state.currentProject}></EditProject>
                     }
                     return  (
                                 <div>
