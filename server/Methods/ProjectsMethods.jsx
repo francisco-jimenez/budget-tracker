@@ -2,9 +2,11 @@ import { Meteor } from 'meteor/meteor'
 import { Projects } from '../../imports/api/Projects.js'
 
 Meteor.methods({
-  addProject:function(name) {
-    console.log('entra en el metodo')
-    Projects.insert({name:name})
+  addProject:function(project) {
+    Projects.insert({
+                      name:project.name ,
+                      budget:project.budget
+                    })
   },
   removeProject:function(id) {
     Projects.remove({_id:id})

@@ -48,6 +48,7 @@ class EditProject extends Component {
                             <Form.Field control={Input} value = {currentProject.name} label='Project name' placeholder={currentProject.name} onChange={this.onChangeName.bind(this)} />
                             <Form.Field control={Input} value = {currentProject.budget} type='number' label='Budget' placeholder='Budget' onChange={this.onChangeBudget.bind(this)} />
                       </Form.Group>
+                      <Form.Field control={Button} onClick={() => {this.props.EditProjectHandler(currentProject)}} >Submit</Form.Field>
                 </Form>
           )
     }

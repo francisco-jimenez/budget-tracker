@@ -17,7 +17,6 @@ export default class ListItem extends React.Component{
             var { fieldsToDisplay } = this.props;
             var { labelsToDisplay } = this.props;
             var { item } = this.props;
-            debugger;
             var contentToDisplay = '';
             for (var i = 0; i<fieldsToDisplay.length; i++) {
               if(fieldsToDisplay[i] in item){

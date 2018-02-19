@@ -1,7 +1,7 @@
 /* CSS declarations go here */
 #footer {
     display:grid;
-    position: absolute;
+    position: relative;
     bottom: 3px;
     height: 8%;
     width: 100%;

@@ -85,6 +85,7 @@
                   Meteor.call('getCategoryById', id, function(error, result) {
                         var newCategoryName = prompt('type new category Name',result.category)
                         Meteor.call('updateCategory', id, newCategoryName);
+
                   })
             }
 
@@ -107,11 +108,22 @@
             }
 
             EditProjectHandler(updatedProject){
+                  var that = this;
                   debugger;
                   //updateProject(updatedProject._id, updatedProject)
                   //var newProjectName = prompt('type new project Name',result.name)
                   this.setState({currentProject : updatedProject})
-                  Meteor.call('updateProject', updatedProject._id, updatedProject)
+                  if("_id" in updatedProject && updatedProject._id) {
+                      Meteor.call('updateProject', updatedProject._id, updatedProject, function(error, result)
+                      {
+                          that.changePage('Projects');
+                      })
+                  } else {
+                    Meteor.call('addProject' , updatedProject, function(error, result)
+                        {
+                            that.changePage('Projects');
+                        })
+                  }
             }
 
             updateProject(id, newProject) {
@@ -135,15 +147,17 @@
             }
 
             addProject(e) {
-                var name = prompt("Project name:");
-                e.preventDefault();
-                if(name && name != ''){
-                    Meteor.call('addProject' , name, function(error, result)
-                    {
-                        console.log('error'  , error);
-                        console.log('result' ,result);
-                    })
-                }
+              e.preventDefault();
+              var that = this;
+
+              var currentProject = {};
+              currentProject.name   = '';
+              currentProject.budget = '';
+              currentProject.entries= [];
+
+              that.setState({currentProject : currentProject}, () => {
+                  that.changePage('New_Project');
+              });
             }
 
 
@@ -163,6 +177,9 @@
 
                 } else if (page === 'Project_Detail') {
                       addButtonText = 'Add Entry'
+
+                } else if (page === 'New_Project') {
+                      addButtonText = ''
 
                 }
                 this.setState(
@@ -203,7 +220,7 @@
                                           labelsToDisplay = {labelsToDisplayInCategoryList}
                                     />
 
-                    }else if (page == 'Project_Detail') {
+                    }else if (page == 'Project_Detail' || page == 'New_Project') {
                             shown = <EditProject
                                                 EditProjectHandler = {this.EditProjectHandler}
                                                 currentProject = {this.state.currentProject}>
@@ -216,7 +233,7 @@
                                               activeItem={this.state.page}
                                       />
                                       {shown}
-                                      <div id='footer' onClick = {this.addFunction.bind(this)}>
+                                      <div id='footer' visible = {this.state.addButtonText!=''} onClick = {this.addFunction.bind(this)}>
                                               {this.state.addButtonText}
                                       </div>
                                 </div>
